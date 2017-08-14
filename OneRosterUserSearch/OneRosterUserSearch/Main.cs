@@ -301,7 +301,7 @@ namespace OneRosterUserSearch
         private void credTestWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             _oneRoster = new OneRosterConnection(_oneRosterKey, _oneRosterSecret);
-            var getTask = _oneRoster.makeRequest($"{_oneRosterUrl}/users?fields=sourcedId&offset=0&limit=1&sort=sourcedId");
+            var getTask = _oneRoster.makeRequest($"{_oneRosterUrl}/ims/oneroster/v1p1/users?fields=sourcedId&offset=0&limit=1&sort=sourcedId");
             Task.WaitAll(getTask);
             HttpResponseMessage response = getTask.Result;
             MessageBox.Show(response.StatusCode != HttpStatusCode.OK
