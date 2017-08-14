@@ -7,116 +7,116 @@ namespace OneRosterUserSearch.Objects
 {
     internal class OneRoster
     {
-        public string sourcedId { get; set; }
-        public string status { get; set; }
-        public DateTime dateLastModified { get; set; }
-        public string username { get; set; }
-        public string userId { get; set; }
-        public string givenName { get; set; }
-        public string familyName { get; set; }
-        public string role { get; set; }
-        public string identifier { get; set; }
-        public string email { get; set; }
-        public string sms { get; set; }
-        public string phone { get; set; }
+        public string SourcedId { get; set; }
+        public string Status { get; set; }
+        public DateTime DateLastModified { get; set; }
+        public string Username { get; set; }
+        public string UserId { get; set; }
+        public string GivenName { get; set; }
+        public string FamilyName { get; set; }
+        public string Role { get; set; }
+        public string Identifier { get; set; }
+        public string Email { get; set; }
+        public string Sms { get; set; }
+        public string Phone { get; set; }
 
         [JsonProperty("demographics")]
-        public Demographics demographicsObject { get; set; }
+        public Demographics DemographicsObject { get; set; }
         [JsonIgnore]
-        public string demographics => $"href: {demographicsObject.href} sourcedid: {demographicsObject.sourcedId} type: {demographicsObject.type}";
+        public string Demographics => $"href: {DemographicsObject?.Href} sourcedid: {DemographicsObject?.SourcedId} type: {DemographicsObject?.Type}";
 
         [JsonProperty("metadata")]
-        public Metadata metadataObject { get; set; }
+        public Metadata MetadataObject { get; set; }
         [JsonIgnore]
-        public string metadata => $"grade: {metadataObject.grade}";
+        public string Metadata => $"grade: {MetadataObject.Grade}";
 
         [JsonProperty("orgs")]
-        public List<Orgs> orgsObject { get; set; }
+        public List<Orgs> OrgsObject { get; set; }
         [JsonIgnore]
-        public string orgs => orgsObject.Aggregate(string.Empty, (current, org) => current + $"[href: {org.href} sourcedId: {org.sourcedId} type: {org.type}]");
+        public string Orgs => OrgsObject.Aggregate(string.Empty, (current, org) => current + $"[href: {org?.Href} sourcedId: {org?.SourcedId} type: {org?.Type}]");
     }
 
 
     internal class Class
     {
-        public string sourcedId { get; set; }
-        public string status { get; set; }
-        public DateTime dateLastModified { get; set; }
-        public string title { get; set; }
-        public string classCode { get; set; }
-        public string classType { get; set; }
-        public string location { get; set; }
-        public string grade { get; set; }
-        public string subjects { get; set; }
+        public string SourcedId { get; set; }
+        public string Status { get; set; }
+        public DateTime DateLastModified { get; set; }
+        public string Title { get; set; }
+        public string ClassCode { get; set; }
+        public string ClassType { get; set; }
+        public string Location { get; set; }
+        public string[] Grades { get; set; }
+        public string[] Subjects { get; set; }
 
         [JsonProperty("course")]
-        public Course courseObject { get; set; }
+        public Course CourseObject { get; set; }
         [JsonIgnore]
-        public string course => $"href: {courseObject.href} sourcedid: {courseObject.sourcedId} type: {courseObject.type}";
+        public string Course => $"href: {CourseObject.Href} sourcedid: {CourseObject.SourcedId} type: {CourseObject.Type}";
 
         [JsonProperty("school")]
-        public School schoolObject { get; set; }
+        public School SchoolObject { get; set; }
         [JsonIgnore]
-        public string school => $"href: {schoolObject.href} sourcedid: {schoolObject.sourcedId} type: {schoolObject.type}";
+        public string School => $"href: {SchoolObject.Href} sourcedid: {SchoolObject.SourcedId} type: {SchoolObject.Type}";
 
         [JsonProperty("terms")]
-        public List<Terms> termsObject { get; set; }
+        public List<Terms> TermsObject { get; set; }
         [JsonIgnore]
-        public string terms => termsObject.Aggregate(string.Empty, (current, term) => current + $"[href: {term.href} sourcedId: {term.sourcedId} type: {term.type}]");
+        public string Terms => TermsObject.Aggregate(string.Empty, (current, term) => current + $"[href: {term.Href} sourcedId: {term.SourcedId} type: {term.Type}]");
 
         [JsonIgnore]
-        public OneRosterUserList teacherList { get; set; }
+        public OneRosterUserList TeacherList { get; set; }
     }
 
     internal class Course
     {
-        public string href { get; set; }
-        public string sourcedId { get; set; }
-        public string type { get; set; }
+        public string Href { get; set; }
+        public string SourcedId { get; set; }
+        public string Type { get; set; }
     }
 
     internal class School
     {
-        public string href { get; set; }
-        public string sourcedId { get; set; }
-        public string type { get; set; }
+        public string Href { get; set; }
+        public string SourcedId { get; set; }
+        public string Type { get; set; }
     }
 
     internal class Terms
     {
-        public string href { get; set; }
-        public string sourcedId { get; set; }
-        public string type { get; set; }
+        public string Href { get; set; }
+        public string SourcedId { get; set; }
+        public string Type { get; set; }
     }
 
     internal class Demographics
     {
-        public string href { get; set; }
-        public string sourcedId { get; set; }
-        public string type { get; set; }
+        public string Href { get; set; }
+        public string SourcedId { get; set; }
+        public string Type { get; set; }
     }
 
     internal class Metadata
     {
-        public string grade { get; set; }
+        public string Grade { get; set; }
     }
 
     internal class Orgs
     {
-        public string href { get; set; }
-        public string sourcedId { get; set; }
-        public string type { get; set; }
+        public string Href { get; set; }
+        public string SourcedId { get; set; }
+        public string Type { get; set; }
     }
 
     internal class OneRosterUserList
     {
         [JsonProperty("users")]
-        public List<OneRoster> oneRosterUserList { get; set; }
+        public IList<OneRoster> oneRosterUserList { get; set; }
     }
 
     internal class ClassList
     {
         [JsonProperty("classes")]
-        public List<Class> classList { get; set; }
+        public IList<Class> classList { get; set; }
     }
 }

@@ -144,7 +144,7 @@ namespace OneRosterUserSearch
                 {
                     alias = row.Cells[0].Value?.ToString(), key = row.Cells[1].Value?.ToString(), secret = row.Cells[2].Value?.ToString()
                 }).ToList();
-            var savePath = Path.Combine(Main.getFolderPath(), "Credentials.txt");
+            var savePath = Path.Combine(Main.GetFolderPath(), "Credentials.txt");
             
 
             try
@@ -168,7 +168,7 @@ namespace OneRosterUserSearch
             try
             {
                 // Get syncInfo from file, written by GroupSync WebAPI
-                using (var tr = new StreamReader(Path.Combine(Main.getFolderPath(), "Credentials.txt")))
+                using (var tr = new StreamReader(Path.Combine(Main.GetFolderPath(), "Credentials.txt")))
                 {
                     return JsonConvert.DeserializeObject<List<Credentials>>(StringCipher.decrypt(tr.ReadToEnd(), StringCipher.getKey()));
                 }

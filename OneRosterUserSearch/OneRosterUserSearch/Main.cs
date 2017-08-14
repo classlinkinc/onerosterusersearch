@@ -69,7 +69,7 @@ namespace OneRosterUserSearch
             classDisplay.BackgroundColor = Color.White;
             classDisplay.RowHeadersVisible = false;
 
-            loadUrl();
+            LoadUrl();
         }
 
         private OneRosterConnection _oneRoster;
@@ -80,7 +80,7 @@ namespace OneRosterUserSearch
         private OneRoster _oneRosterUser;
         private Loading _loadingForm;
 
-        private bool getCredentials()
+        private bool GetCredentials()
         {
             if (oneRosterUrl.Text == string.Empty)
             {
@@ -107,7 +107,7 @@ namespace OneRosterUserSearch
         private void userSearchBtn_Click(object sender, EventArgs e)
         {
             // user didn't fill out all credentials
-            if (!getCredentials())
+            if (!GetCredentials())
             {
                 return;
             }
@@ -130,7 +130,7 @@ namespace OneRosterUserSearch
         {
             _oneRoster = new OneRosterConnection(_oneRosterKey, _oneRosterSecret);
             var filter = _oneRoster.urlEncode($"username='{_studentUsername}'");
-            var userUrl = $"{_oneRosterUrl}/users?filter={filter}";
+            var userUrl = $"{_oneRosterUrl}/ims/oneroster/v1p1/users?filter={filter}";
 
             var getTask = _oneRoster.makeRequest(userUrl);
             Task.WaitAll(getTask);
@@ -150,12 +150,12 @@ namespace OneRosterUserSearch
             var oneRosterDict = _oneRosterUser.toDictionary();
             Invoke(new Action(() =>
             {
-                populateUserDisplay(oneRosterDict);
+                PopulateUserDisplay(oneRosterDict);
             }));
 
             // get class list for student
 
-            var classUrl = $"{_oneRosterUrl}/users/{_oneRoster.urlEncode(_oneRosterUser.sourcedId)}/classes";
+            var classUrl = $"{_oneRosterUrl}/ims/oneroster/v1p1/users/{_oneRoster.urlEncode(_oneRosterUser.SourcedId)}/classes";
             getTask = _oneRoster.makeRequest(classUrl);
             Task.WaitAll(getTask);
             response = getTask.Result;
@@ -169,7 +169,7 @@ namespace OneRosterUserSearch
             var classDisplayList = new List<List<object>>();
             foreach (Class _class in classList.classList)
             {
-                var teacherUrl = $"{_oneRosterUrl}/classes/{_oneRoster.urlEncode(_class.sourcedId)}/teachers";
+                var teacherUrl = $"{_oneRosterUrl}/ims/oneroster/v1p1/classes/{_oneRoster.urlEncode(_class.SourcedId)}/teachers";
                 getTask = _oneRoster.makeRequest(teacherUrl);
                 Task.WaitAll(getTask);
                 response = getTask.Result;
@@ -179,25 +179,25 @@ namespace OneRosterUserSearch
                 }
                 readResult = response.Content.ReadAsStringAsync();
                 Task.WaitAll(readResult);
-                _class.teacherList = JsonConvert.DeserializeObject<OneRosterUserList>(readResult.Result);
+                _class.TeacherList = JsonConvert.DeserializeObject<OneRosterUserList>(readResult.Result);
                 var classDisplayObj = new List<object>
                 {
-                    _class.sourcedId,
-                    _class.title,
-                    _class.courseObject.sourcedId,
-                    _class.schoolObject.sourcedId,
-                    string.Join(",",_class.teacherList.oneRosterUserList.Select(teacher => $"{teacher.givenName} {teacher.familyName}").ToArray())
+                    _class.SourcedId,
+                    _class.Title,
+                    _class.CourseObject.SourcedId,
+                    _class.SchoolObject.SourcedId,
+                    string.Join(",",_class.TeacherList.oneRosterUserList.Select(teacher => $"{teacher.GivenName} {teacher.FamilyName}").ToArray())
             };
                 classDisplayList.Add(classDisplayObj);
             }
 
             Invoke(new Action(() =>
             {
-                populateClassDisplay(classDisplayList);
+                PopulateClassDisplay(classDisplayList);
             }));
         }
 
-        private void populateUserDisplay(IDictionary<string, object> inputDictionary)
+        private void PopulateUserDisplay(IDictionary<string, object> inputDictionary)
         {
             userDisplay.Rows.Clear();
             userDisplay.Rows.AddRange(inputDictionary.Select(kvp =>
@@ -209,7 +209,7 @@ namespace OneRosterUserSearch
             }).ToArray());
         }
 
-        private void populateClassDisplay(IEnumerable<List<object>> inputList)
+        private void PopulateClassDisplay(IEnumerable<List<object>> inputList)
         {
             classDisplay.Rows.Clear();
             classDisplay.Rows.AddRange(inputList.Select(index =>
@@ -243,7 +243,7 @@ namespace OneRosterUserSearch
                 
         }
 
-        public static string getFolderPath()
+        public static string GetFolderPath()
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "OneRosterStudentSchedule");
             Directory.CreateDirectory(path);
@@ -252,7 +252,7 @@ namespace OneRosterUserSearch
 
         private void saveUrlBtn_Click(object sender, EventArgs e)
         {
-            var savePath = Path.Combine(getFolderPath(), "OneRosterURL.txt");
+            var savePath = Path.Combine(GetFolderPath(), "OneRosterURL.txt");
             try
             {
                 using (TextWriter tw = new StreamWriter(savePath))
@@ -268,12 +268,12 @@ namespace OneRosterUserSearch
             }
         }
 
-        private void loadUrl()
+        private void LoadUrl()
         {
             try
             {
                 // Get syncInfo from file, written by GroupSync WebAPI
-                using (var tr = new StreamReader(Path.Combine(getFolderPath(), "OneRosterURL.txt")))
+                using (var tr = new StreamReader(Path.Combine(GetFolderPath(), "OneRosterURL.txt")))
                 {
                     oneRosterUrl.Text = StringCipher.decrypt(tr.ReadToEnd(), StringCipher.getKey());
                 }
@@ -288,7 +288,7 @@ namespace OneRosterUserSearch
         private void testBtn_Click(object sender, EventArgs e)
         {
             testBtn.Enabled = false;
-            if (!getCredentials())
+            if (!GetCredentials())
             {
                 testBtn.Enabled = true;
                 return;
